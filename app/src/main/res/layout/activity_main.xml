@@ -25,7 +25,7 @@
 				android:layout_height="match_parent">
 
 			<android.support.v7.widget.AppCompatImageView android:layout_width="70dp"
-			                                              android:layout_height="38dp"
+			                                              android:layout_height="42dp"
 			                                              android:scaleType="centerInside"
 			                                              app:srcCompat="@drawable/logo"
 			                                              app:layout_constraintStart_toStartOf="parent"
@@ -38,13 +38,13 @@
 	</android.support.v7.widget.Toolbar>
 
 	<LinearLayout
-		  android:layout_width="wrap_content"
-	      android:layout_height="wrap_content"
-	      android:elevation="4dp"
-		  android:clipToPadding="false"
-	      app:layout_constraintStart_toStartOf="parent"
-	      app:layout_constraintEnd_toEndOf="parent"
-	      app:layout_constraintTop_toTopOf="@+id/toolbar">
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:elevation="4dp"
+			android:clipToPadding="false"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/toolbar" android:id="@+id/linearLayout">
 
 
 		<android.support.design.button.MaterialButton
@@ -61,6 +61,8 @@
 				android:gravity="center"
 				android:paddingStart="14dp"
 				android:paddingEnd="14dp"
+				android:paddingTop="2dp"
+				android:paddingBottom="2dp"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:elevation="6dp"
@@ -69,6 +71,13 @@
 	</LinearLayout>
 
 
+	<android.support.v7.widget.RecyclerView android:layout_width="match_parent"
+	                                        android:layout_height="0dp"
+	                                        android:id="@+id/photos_rv"
+	                                        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+	                                        app:layout_constraintBottom_toBottomOf="parent"
+	                                        app:layout_constraintEnd_toEndOf="parent"
+	                                        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

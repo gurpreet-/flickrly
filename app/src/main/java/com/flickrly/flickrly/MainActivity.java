@@ -3,6 +3,8 @@ package com.flickrly.flickrly;
 import android.support.design.button.MaterialButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,9 +20,13 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         MaterialButton sortBtn = findViewById(R.id.sort_btn);
+        RecyclerView photosRv = findViewById(R.id.photos_rv);
+
         setSupportActionBar(toolbar);
         IconHelper.setupButton(this, sortBtn, GoogleMaterial.Icon.gmd_keyboard_arrow_down);
 
+        photosRv.setLayoutManager(new LinearLayoutManager(this));
+        //photosRv.setAdapter();
     }
 
     @Override
