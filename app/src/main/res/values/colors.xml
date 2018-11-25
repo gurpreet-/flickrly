@@ -4,9 +4,48 @@
 	<color name="colorPrimaryDark">#000000</color>
 	<color name="colorAccent">#cecece</color>
 
-	<color name="white">#ffffff</color>
-	<color name="whiteD1">#fcfcfc</color>
+	<color name="greenD1">#2bf16d</color>
 
-	<color name="snow">#ededed</color>
+	<color name="redD1">#c92d22</color>
+
+	<color name="whiteT4">#b8ffffff</color>
+	<color name="whiteT1">#d8ffffff</color>
+	<color name="white">#ffffff</color>
+	<color name="whiteD1">#fdfdfd</color>
+
+	<color name="snow">#f7f7f7</color>
+	<color name="snowD1">#f2f2f2</color>
+	<color name="snowD2">#ececec</color>
+	<color name="snowD3">#dfdfdf</color>
+
+	<color name="grayL6">#c9c9c9</color>
+	<color name="grayL5">#c4c4c4</color>
+	<color name="grayL4">#bcbcbc</color>
+	<color name="grayL3">#b6b6b6</color>
+	<color name="grayL2">#aeaeae</color>
+	<color name="grayL1">#a7a7a7</color>
+	<color name="gray">#a1a1a1</color>
+	<color name="grayD1">#939393</color>
+	<color name="grayD2">#868686</color>
+	<color name="grayD3">#7b7b7b</color>
+	<color name="grayD4">#595959</color>
+
+
+	<color name="blackL5">#353535</color>
+	<color name="blackL4">#262626</color>
+	<color name="blackL3">#202020</color>
+	<color name="blackL2">#181818</color>
+	<color name="blackL1">#0e0e0e</color>
+	<color name="black">#000000</color>
+
+	<color name="blackT10">#0f000000</color>
+	<color name="blackT9">#28000000</color>
+	<color name="blackT8">#3e000000</color>
+	<color name="blackT7">#52000000</color>
+	<color name="blackT6">#61000000</color>
+	<color name="blackT5">#6c000000</color>
+	<color name="blackT1">#95000000</color>
+
+	<color name="transparent">@android:color/transparent</color>
 
 </resources>

@@ -1,14 +1,19 @@
 package com.flickrly.flickrly.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +42,7 @@ public class MainActivity extends BaseActivity {
     private MaterialButton sortBtn;
     private BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
     private LinearLayout bottomLayout;
+    private View blackBg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +57,9 @@ public class MainActivity extends BaseActivity {
         photosRv = findViewById(R.id.photos_rv);
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         bottomLayout = findViewById(R.id.bottom_sheet);
+        blackBg = findViewById(R.id.black_bg);
 
-
+        bottomLayout.setBackground(getDrawableWithRadius());
         bottomSheetBehavior = BottomSheetBehavior.from(bottomLayout);
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -60,21 +67,29 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    //bg.setVisibility(View.GONE);
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    blackBg.setAlpha(0);
+                }
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    blackBg.setAlpha(1);
                 }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                //alphaBg(slideOffset);
+                float s = Math.abs(slideOffset);
+                blackBg.setAlpha(1 - s);
             }
 
         });
 
         IconHelper.setupButton(this, sortBtn, GoogleMaterial.Icon.gmd_keyboard_arrow_down);
         sortBtn.setOnClickListener(view -> {
-
+            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            } else {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
         });
 
         photoAdapter = new PhotoAdapter(new ArrayList<>());
@@ -91,6 +106,7 @@ public class MainActivity extends BaseActivity {
         refresh();
     }
 
+
     private void onPhotoClicked(Photo photo) {
         Intent i = new Intent(this, PhotoActivity.class);
         startActivity(i);
@@ -106,6 +122,14 @@ public class MainActivity extends BaseActivity {
     private void gotPhotos(PhotoShell photoShell) {
         photoAdapter.addAll(photoShell.getItems());
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+
+    private Drawable getDrawableWithRadius() {
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        gradientDrawable.setCornerRadii(new float[]{20, 20, 20, 20, 20, 20, 20, 20});
+        gradientDrawable.setColor(Color.WHITE);
+        return gradientDrawable;
     }
 
     @Override

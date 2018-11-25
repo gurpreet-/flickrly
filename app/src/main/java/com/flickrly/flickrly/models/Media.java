@@ -11,9 +11,14 @@ public class Media {
         this.m = m;
     }
 
+    public String getHQ() {
+        return getM().replace("_m.", "_b.");
+    }
+
+
     @Override
     public String toString() {
-        return "ClassPojo [m = " + m + "]";
+        return "[m = " + m + "]";
     }
 }
 	

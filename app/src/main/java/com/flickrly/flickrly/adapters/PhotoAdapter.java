@@ -53,7 +53,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
 
         GlideApp.with(holder.itemView.getContext())
                 .asBitmap()
-                .load(Uri.parse(item.getMedia().getM()))
+                .load(Uri.parse(item.getMedia().getHQ()))
                 .centerCrop()
                 .transition(BitmapTransitionOptions.withCrossFade())
                 .into(holder.imageView);
