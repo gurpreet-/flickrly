@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import com.flickrly.flickrly.R;
 import com.flickrly.flickrly.adapters.PhotoAdapter;
 import com.flickrly.flickrly.api.RestApi;
@@ -27,10 +26,8 @@ import static com.flickrly.flickrly.models.Photo.PHOTOS;
 
 public class SearchActivity extends BaseActivity implements TextWatcher {
 
-
     @Inject
     RestApi api;
-
 
     private PhotoAdapter photoAdapter;
     private RecyclerView photosRv;
@@ -45,7 +42,6 @@ public class SearchActivity extends BaseActivity implements TextWatcher {
         setupToolbar();
         setupRecycler();
         setupSearch();
-
     }
 
     private void setupSearch() {
@@ -90,6 +86,11 @@ public class SearchActivity extends BaseActivity implements TextWatcher {
 
     }
 
+    /**
+     * When the user types a query,
+     * we search the locally persisted photo
+     * list and any relevant tags.
+     */
     @Override
     public void afterTextChanged(Editable editable) {
         String searchText = editable.toString();

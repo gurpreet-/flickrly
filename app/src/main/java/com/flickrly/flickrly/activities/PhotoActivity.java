@@ -42,9 +42,6 @@ public class PhotoActivity extends BaseActivity {
 
     private static final int SAVE_TO_GALLERY_CODE = 2333;
 
-    @Inject
-    RestApi api;
-
     private DateTimeFormatter formatter =
             DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
                     .withLocale(Locale.UK)
@@ -58,14 +55,14 @@ public class PhotoActivity extends BaseActivity {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("");
 
+        setupToolbar();
+
+        // Get the persisted photo.
         photo = Paper.book().read(PHOTO);
         image = findViewById(R.id.image);
 
+        // Find views in the layout.
         TextView title = findViewById(R.id.title);
         TextView desc = findViewById(R.id.description);
         TextView dateTaken = findViewById(R.id.date_taken);
@@ -80,8 +77,11 @@ public class PhotoActivity extends BaseActivity {
         ImageView shareBtn = findViewById(R.id.share);
         ImageView browserBtn = findViewById(R.id.website);
 
-        title.setText(photo.getTitle());
 
+        // Now that we've got the views, we can
+        // start populating them.
+
+        title.setText(photo.getTitle());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             desc.setText(Html.fromHtml(photo.getDescription(), Html.FROM_HTML_MODE_COMPACT));
         } else {
@@ -119,13 +119,20 @@ public class PhotoActivity extends BaseActivity {
             hideViews(tagChipGroup, tagChipGroupContainer, tagChipsTitle);
         }
 
+        // When the gallery button is pressed,
+        // we save it to the gallery.
         addToGalleryBtn.setOnClickListener(view -> saveImageToGallery());
 
+        // When the browser button is pressed,
+        // we start the browser activity with
+        // a link.
         browserBtn.setOnClickListener(view -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(photo.getLink()));
             startActivity(browserIntent);
         });
 
+        // When the share button is clicked,
+        // we open up a share view.
         shareBtn.setOnClickListener(view -> {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
@@ -133,6 +140,13 @@ public class PhotoActivity extends BaseActivity {
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
         });
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
     }
 
     private void saveImageToGallery() {
@@ -152,6 +166,11 @@ public class PhotoActivity extends BaseActivity {
 
     }
 
+    private void bitmapToGallery(Bitmap bitmap) {
+        MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, photo.getTitle() , "");
+        Toast.makeText(this, "Saved image to gallery.", Toast.LENGTH_LONG).show();
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -162,28 +181,17 @@ public class PhotoActivity extends BaseActivity {
         }
     }
 
-
-    public boolean isExternalStorageWritable() {
+    private boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    private void bitmapToGallery(Bitmap bitmap) {
-        MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, photo.getTitle() , "");
-        Toast.makeText(this, "Saved image to gallery.", Toast.LENGTH_LONG).show();
-    }
 
-    public void requestStorage() {
+    private void requestStorage() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, SAVE_TO_GALLERY_CODE);
     }
 
-    public boolean grantedStorage() {
-        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        return false;
+    private boolean grantedStorage() {
+        return checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 }
