@@ -1,5 +1,6 @@
 package com.flickrly.flickrly.converters;
 
+import com.flickrly.flickrly.dagger.MainModule;
 import com.flickrly.flickrly.models.PhotoShell;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -29,8 +30,7 @@ public class GsonPhotoShellConverter extends Converter.Factory {
                         .replace("jsonFlickrFeed(", "");
 
                 String finished = removeLastChar(noStartingWords, ')');
-                JsonReader jsonReader = gson.newJsonReader(new StringReader(finished));
-                return gson.fromJson(jsonReader, PhotoShell.class);
+                return gson.fromJson(finished, PhotoShell.class);
             };
         }
         return null;

@@ -1,17 +1,16 @@
 package com.flickrly.flickrly.converters;
 
+import android.util.Log;
 import com.google.gson.*;
 import org.threeten.bp.Instant;
-import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.lang.reflect.Type;
 
-public class GsonDateTimeConverter implements JsonSerializer<Instant>, JsonDeserializer<Instant> {
+public class GsonInstantConverter implements JsonSerializer<Instant>, JsonDeserializer<Instant> {
 
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter
-            .ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            .withZone(ZoneId.of("UTC"));
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX");
 
     @Override
     public JsonElement serialize(Instant src, Type typeOfSrc, JsonSerializationContext context) {
@@ -21,7 +20,6 @@ public class GsonDateTimeConverter implements JsonSerializer<Instant>, JsonDeser
     @Override
     public Instant deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
-        // Do not try to deserialize null or empty values
         String date = json.getAsString();
 
         if (date == null
@@ -29,7 +27,7 @@ public class GsonDateTimeConverter implements JsonSerializer<Instant>, JsonDeser
                 || date.equalsIgnoreCase("null")) {
             return null;
         }
-
-        return Instant.parse(date);
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(date, dateTimeFormatter);
+        return zonedDateTime.toInstant();
     }
 }

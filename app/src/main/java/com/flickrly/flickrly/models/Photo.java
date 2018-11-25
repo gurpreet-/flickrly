@@ -1,5 +1,8 @@
 package com.flickrly.flickrly.models;
 
+import org.threeten.bp.Instant;
+
+
 public class Photo {
     private String tags;
 
@@ -9,13 +12,14 @@ public class Photo {
 
     private String description;
 
-    private String date_taken;
+    private Instant dateTaken;
 
     private String link;
 
-    private String author_id;
+    private String authorId;
 
-    private String published;
+
+    private Instant published;
 
     private Media media;
 
@@ -51,36 +55,12 @@ public class Photo {
         this.description = description;
     }
 
-    public String getDateTaken() {
-        return date_taken;
-    }
-
-    public void setDateTaken(String date_taken) {
-        this.date_taken = date_taken;
-    }
-
     public String getLink() {
         return link;
     }
 
     public void setLink(String link) {
         this.link = link;
-    }
-
-    public String getAuthorId() {
-        return author_id;
-    }
-
-    public void setAuthorId(String author_id) {
-        this.author_id = author_id;
-    }
-
-    public String getPublished() {
-        return published;
-    }
-
-    public void setPublished(String published) {
-        this.published = published;
     }
 
     public Media getMedia() {
@@ -91,9 +71,36 @@ public class Photo {
         this.media = media;
     }
 
+    public Instant getDateTaken() {
+        return dateTaken;
+    }
+
+    public void setDateTaken(Instant dateTaken) {
+        this.dateTaken = dateTaken;
+    }
+
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
+    }
+
+    public Instant getPublished() {
+        return published;
+    }
+
+    public void setPublished(Instant published) {
+        this.published = published;
+    }
+
     @Override
     public String toString() {
-        return "[tags = " + tags + ", author = " + author + ", title = " + title + ", description = " + description + ", date_taken = " + date_taken + ", link = " + link + ", author_id = " + author_id + ", published = " + published + ", media = " + media + "]";
+        return "[tags = " + tags + ", author = " + author + ", title = " + title +
+                ", description = " + description + ", date_taken = " + dateTaken +
+                ", link = " + link + ", author_id = " + authorId +
+                ", published = " + published + ", media = " + media + "]";
     }
 }
 	

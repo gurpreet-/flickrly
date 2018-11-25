@@ -2,6 +2,7 @@ package com.flickrly.flickrly.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -9,14 +10,12 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.UiThread;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -26,7 +25,6 @@ import com.flickrly.flickrly.R;
 import com.flickrly.flickrly.adapters.PhotoAdapter;
 import com.flickrly.flickrly.api.RestApi;
 import com.flickrly.flickrly.enums.Sort;
-import com.flickrly.flickrly.helpers.AutoCloseBottomSheetBehavior;
 import com.flickrly.flickrly.helpers.IconHelper;
 import com.flickrly.flickrly.models.Photo;
 import com.flickrly.flickrly.models.PhotoShell;
@@ -37,11 +35,21 @@ import io.reactivex.disposables.Disposable;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends BaseActivity {
 
     @Inject
     RestApi api;
+
+    public static String SHARED_PREFS =  "GLOBAL_SHARED_PREFS";
+    public static String PREF_SORT =  "SORT";
+    public static String PREF_SORT_CREATION =  "creation";
+    public static String PREF_SORT_PUBLICATION =  "publication";
+
+
     private PhotoAdapter photoAdapter;
     private RecyclerView photosRv;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -56,6 +64,7 @@ public class MainActivity extends BaseActivity {
     private int primaryColor;
     private int accentColor;
     private Sort currentSort;
+    private SharedPreferences sharedPreferences;
 
     @Override
     @SuppressLint("ClickableViewAccessibility")
@@ -78,7 +87,6 @@ public class MainActivity extends BaseActivity {
         primaryColor = getColor(R.color.colorPrimaryL1);
         accentColor = getColor(R.color.colorAccent);
 
-
         View.OnClickListener onSortBtnsClick = view -> toggleSort();
         creationBtn.setOnClickListener(onSortBtnsClick);
         publicationBtn.setOnClickListener(onSortBtnsClick);
@@ -98,11 +106,22 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String sort = sharedPreferences.getString(PREF_SORT, PREF_SORT_CREATION);
+        if (sort.equalsIgnoreCase(PREF_SORT_CREATION)) {
+            setSort(Sort.CREATION);
+        } else {
+            setSort(Sort.PUBLICATION);
+        }
+
+
         photoAdapter = new PhotoAdapter(new ArrayList<>());
-        photosRv.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setReverseLayout(true);
+        photosRv.setLayoutManager(linearLayoutManager);
         photosRv.setAdapter(photoAdapter);
 
-        setSort(Sort.CREATION);
 
         Disposable d = photoAdapter
                 .clickedListener()
@@ -120,6 +139,7 @@ public class MainActivity extends BaseActivity {
         } else {
             setSort(Sort.CREATION);
         }
+        refresh();
     }
 
     private boolean isSortingByCreation() {
@@ -128,10 +148,15 @@ public class MainActivity extends BaseActivity {
 
     private void setSort(Sort sort) {
         this.currentSort = sort;
+        if (photoAdapter != null) {
+            photoAdapter.replaceAll(new ArrayList<>());
+        }
         toggleButton(sort);
         if (sort.equals(Sort.CREATION)) {
+            sharedPreferences.edit().putString(PREF_SORT, PREF_SORT_CREATION).apply();
             sortBtn.setText("Creation");
         } else {
+            sharedPreferences.edit().putString(PREF_SORT, PREF_SORT_PUBLICATION).apply();
             sortBtn.setText("Publication");
         }
     }
@@ -162,12 +187,32 @@ public class MainActivity extends BaseActivity {
         }
         Disposable d = api
                 .getPublicPhotos(sort)
+                .throttleWithTimeout(2000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::gotPhotos, Throwable::printStackTrace);
         registerDisposable(d);
     }
 
     private void gotPhotos(PhotoShell photoShell) {
-        photoAdapter.replaceAll(photoShell.getItems());
+        // Sort the list in descending order
+        List<Photo> photoList = photoShell.getItems();
+        if (photoList.size() == 0) {
+            return;
+        }
+        Collections.sort(photoList, (p1, p2) -> {
+            if (isSortingByCreation()) {
+                if (p1.getDateTaken() != null && p2.getDateTaken() != null) {
+                    return p1.getDateTaken().compareTo(p2.getDateTaken());
+                }
+            } else {
+                if (p1.getPublished() != null && p2.getPublished() != null) {
+                    return p1.getPublished().compareTo(p2.getPublished());
+                }
+            }
+            return 0;
+        });
+
+        photoAdapter.replaceAll(photoList);
         swipeRefreshLayout.setRefreshing(false);
     }
 

@@ -15,7 +15,6 @@ import com.flickrly.flickrly.dagger.GlideApp;
 import com.flickrly.flickrly.models.Photo;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
-
 import java.util.List;
 
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder> {
@@ -37,6 +36,10 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
     @Override
     public int getItemCount() {
         return photos.size();
+    }
+
+    public Photo getItem(int pos) {
+        return photos.get(pos);
     }
 
     @Override
@@ -66,18 +69,26 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
         holder.itemView.setOnClickListener(null);
     }
 
+    public void addAllAtStart(List<Photo> list) {
+        if (list.size() == 0) {
+            return;
+        }
+        for (int i = list.size() - 1; i >= 0; i--) {
+            photos.add(0, list.get(i));
+        }
+        notifyItemRangeInserted(0, list.size() - 1);
+    }
+
     public void addAll(List<Photo> list) {
-        this.photos.addAll(list);
-        notifyDataSetChanged();
+        for (Photo p : list) {
+            photos.add(p);
+            notifyItemInserted(getItemCount() - 1);
+        }
     }
 
     public void replaceAll(List<Photo> list) {
         photos.clear();
-        int pos = 0;
-        for (Photo photo : list) {
-            photos.add(photo);
-            pos++;
-        }
+        photos.addAll(list);
         notifyDataSetChanged();
 
     }

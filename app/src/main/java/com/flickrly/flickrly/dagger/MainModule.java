@@ -32,7 +32,7 @@ public class MainModule {
 
     @Provides
     Cache provideOkHttpCache() {
-        int cacheSize = 10 * 1024 * 1024; // 10 MiB
+        int cacheSize = 10 * 1024 * 1024; // 10 Mb
         Cache cache = new Cache(context.getCacheDir(), cacheSize);
         return cache;
     }
@@ -83,12 +83,12 @@ public class MainModule {
         return retrofit.create(RestApi.class);
     }
 
-    public Gson getGson() {
+    public static Gson getGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         return gsonBuilder
                 .serializeNulls()
                 .setLenient()
-                .registerTypeAdapter(Instant.class, new GsonDateTimeConverter())
+                .registerTypeAdapter(Instant.class, new GsonInstantConverter())
                 .registerTypeAdapter(LocalDate.class, new GsonLocalDateConverter())
                 .create();
     }
