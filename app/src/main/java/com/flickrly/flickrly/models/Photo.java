@@ -2,8 +2,10 @@ package com.flickrly.flickrly.models;
 
 import org.threeten.bp.Instant;
 
+import java.io.Serializable;
 
-public class Photo {
+
+public class Photo implements Serializable {
     private String tags;
 
     private String author;

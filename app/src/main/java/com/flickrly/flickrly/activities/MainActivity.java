@@ -65,6 +65,7 @@ public class MainActivity extends BaseActivity {
     private int accentColor;
     private Sort currentSort;
     private SharedPreferences sharedPreferences;
+    private View errorLayout;
 
     @Override
     @SuppressLint("ClickableViewAccessibility")
@@ -83,6 +84,8 @@ public class MainActivity extends BaseActivity {
         blackBg = findViewById(R.id.black_bg);
         creationBtn = findViewById(R.id.creation_btn);
         publicationBtn = findViewById(R.id.publication_btn);
+        errorLayout = findViewById(R.id.error);
+
 
         primaryColor = getColor(R.color.colorPrimaryL1);
         accentColor = getColor(R.color.colorAccent);
@@ -173,10 +176,12 @@ public class MainActivity extends BaseActivity {
 
     private void onPhotoClicked(Photo photo) {
         Intent i = new Intent(this, PhotoActivity.class);
+        i.putExtra("photo", photo);
         startActivity(i);
     }
 
     private void refresh() {
+        errorLayout.setVisibility(View.GONE);
         String sort;
         if (isSortingByCreation()) {
             // Is sorting by creation date
@@ -189,8 +194,14 @@ public class MainActivity extends BaseActivity {
                 .getPublicPhotos(sort)
                 .throttleWithTimeout(2000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::gotPhotos, Throwable::printStackTrace);
+                .subscribe(this::gotPhotos, this::onError);
         registerDisposable(d);
+    }
+
+    private void onError(Throwable throwable) {
+        if (errorLayout.getVisibility() == View.GONE) {
+            errorLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private void gotPhotos(PhotoShell photoShell) {

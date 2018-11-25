@@ -1,6 +1,8 @@
 package com.flickrly.flickrly.models;
 
-public class Media {
+import java.io.Serializable;
+
+public class Media implements Serializable {
     private String m;
 
     public String getM() {
