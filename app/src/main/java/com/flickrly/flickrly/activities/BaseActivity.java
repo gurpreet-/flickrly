@@ -60,4 +60,10 @@ public class BaseActivity extends AppCompatActivity {
     public View getView() {
         return findViewById(R.id.top);
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
 }

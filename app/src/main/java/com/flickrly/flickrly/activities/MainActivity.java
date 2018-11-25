@@ -40,6 +40,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.flickrly.flickrly.models.Photo.PHOTO;
+import static com.flickrly.flickrly.models.Photo.PHOTOS;
+
 public class MainActivity extends BaseActivity {
 
     @Inject
@@ -177,7 +180,7 @@ public class MainActivity extends BaseActivity {
 
     private void onPhotoClicked(Photo photo) {
         Intent i = new Intent(this, PhotoActivity.class);
-        Paper.book().write("photo", photo);
+        Paper.book().write(PHOTO, photo);
         startActivity(i);
     }
 
@@ -191,7 +194,7 @@ public class MainActivity extends BaseActivity {
             // Is sorting by publication date
             sort = "date-posted-desc";
         }
-        Paper.book().delete("photos");
+        Paper.book().delete(PHOTOS);
         Disposable d = api
                 .getPublicPhotos(sort)
                 .throttleWithTimeout(2000, TimeUnit.MILLISECONDS)
@@ -212,7 +215,6 @@ public class MainActivity extends BaseActivity {
         if (photoList.size() == 0) {
             return;
         }
-        Paper.book().write("photos", photoList);
         Collections.sort(photoList, (p1, p2) -> {
             if (isSortingByCreation()) {
                 if (p1.getDateTaken() != null && p2.getDateTaken() != null) {
@@ -225,6 +227,8 @@ public class MainActivity extends BaseActivity {
             }
             return 0;
         });
+
+        Paper.book().write(PHOTOS, photoList);
 
         photoAdapter.replaceAll(photoList);
         swipeRefreshLayout.setRefreshing(false);

@@ -36,6 +36,8 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Locale;
 
+import static com.flickrly.flickrly.models.Photo.PHOTO;
+
 public class PhotoActivity extends BaseActivity {
 
     private static final int SAVE_TO_GALLERY_CODE = 2333;
@@ -61,7 +63,7 @@ public class PhotoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
 
-        photo = Paper.book().read("photo");
+        photo = Paper.book().read(PHOTO);
         image = findViewById(R.id.image);
 
         TextView title = findViewById(R.id.title);
@@ -160,12 +162,6 @@ public class PhotoActivity extends BaseActivity {
         }
     }
 
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return super.onSupportNavigateUp();
-    }
 
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();

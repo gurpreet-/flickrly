@@ -8,6 +8,10 @@ import java.util.List;
 
 public class Photo implements Serializable {
 
+    public static final String PHOTOS = "photos";
+    public static final String PHOTO = "photo";
+
+
     private String tags;
 
     private String author;
@@ -120,5 +124,6 @@ public class Photo implements Serializable {
                 ", link = " + link + ", author_id = " + authorId +
                 ", published = " + published + ", media = " + media + "]";
     }
+
 }
 	

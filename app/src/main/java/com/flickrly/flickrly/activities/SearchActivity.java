@@ -15,6 +15,8 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.flickrly.flickrly.models.Photo.PHOTOS;
+
 public class SearchActivity extends BaseActivity {
 
 
@@ -37,8 +39,10 @@ public class SearchActivity extends BaseActivity {
         LinearLayoutManager ll = new LinearLayoutManager(this);
         photosRv.setLayoutManager(ll);
 
-        List<Photo> photos = Paper.book().read("photos");
+        List<Photo> photos = Paper.book().read(PHOTOS);
         photoAdapter = new PhotoAdapter(photos);
+
+        photosRv.setAdapter(photoAdapter);
     }
 
 
