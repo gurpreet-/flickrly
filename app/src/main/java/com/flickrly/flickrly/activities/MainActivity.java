@@ -1,6 +1,7 @@
 package com.flickrly.flickrly.activities;
 
 import android.support.design.button.MaterialButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ public class MainActivity extends BaseActivity {
     RestApi api;
     private PhotoAdapter photoAdapter;
     private RecyclerView photosRv;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class MainActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         MaterialButton sortBtn = findViewById(R.id.sort_btn);
         photosRv = findViewById(R.id.photos_rv);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
 
         setSupportActionBar(toolbar);
         IconHelper.setupButton(this, sortBtn, GoogleMaterial.Icon.gmd_keyboard_arrow_down);
@@ -47,6 +50,11 @@ public class MainActivity extends BaseActivity {
         photoAdapter = new PhotoAdapter(new ArrayList<>());
         photosRv.setAdapter(photoAdapter);
 
+        swipeRefreshLayout.setOnRefreshListener(this::refresh);
+        refresh();
+    }
+
+    private void refresh() {
         Disposable d = api
                 .getPublicPhotos()
                 .subscribe(this::gotPhotos, Throwable::printStackTrace);
@@ -55,6 +63,7 @@ public class MainActivity extends BaseActivity {
 
     private void gotPhotos(PhotoShell photoShell) {
         photoAdapter.addAll(photoShell.getItems());
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
