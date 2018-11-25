@@ -1,5 +1,6 @@
 package com.flickrly.flickrly.activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.flickrly.flickrly.R;
@@ -73,6 +75,10 @@ public class PhotoActivity extends BaseActivity {
         HorizontalScrollView tagChipGroupContainer = findViewById(R.id.tags_container);
         TextView tagChipsTitle = findViewById(R.id.tags_title);
 
+        ImageView addToGalleryBtn = findViewById(R.id.add_to_gallery);
+        ImageView shareBtn = findViewById(R.id.share);
+        ImageView browserBtn = findViewById(R.id.website);
+
         title.setText(photo.getTitle());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -116,6 +122,30 @@ public class PhotoActivity extends BaseActivity {
             tagChipGroupContainer.setVisibility(View.GONE);
             tagChipsTitle.setVisibility(View.GONE);
         }
+
+        addToGalleryBtn.setOnClickListener(view -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, photo.getLink());
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+        });
+
+        browserBtn.setOnClickListener(view -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, photo.getLink());
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+        });
+
+        shareBtn.setOnClickListener(view -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, photo.getLink());
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+        });
     }
 
     @Override

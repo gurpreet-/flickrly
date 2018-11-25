@@ -191,9 +191,9 @@
 
 						<ImageView android:layout_width="40dp"
 						           android:layout_height="40dp"
-						           android:id="@+id/favourite"
+						           android:id="@+id/add_to_gallery"
 						           app:ico_color="@color/colorPrimary"
-						           app:ico_icon="gmd-favorite-border"
+						           app:ico_icon="gmd-add-to-photos"
 						           app:ico_size="40dp"
 						           android:padding="6dp"/>
 
@@ -207,7 +207,7 @@
 					              android:clickable="true"
 					              app:layout_constraintStart_toEndOf="@+id/favourite_btn"
 					              android:layout_marginStart="8dp"
-					              app:layout_constraintEnd_toStartOf="@+id/url_btn"
+					              app:layout_constraintEnd_toStartOf="@+id/website_container"
 					              android:layout_marginEnd="8dp">
 
 						<ImageView android:layout_width="40dp"
@@ -225,8 +225,8 @@
 					              android:orientation="vertical"
 					              android:background="@drawable/ripple_selector_bg_white"
 					              android:clickable="true"
+					              android:id="@+id/website_container"
 					              android:layout_height="wrap_content"
-					              android:id="@+id/url_btn"
 					              app:layout_constraintEnd_toEndOf="parent">
 
 						<ImageView android:layout_width="40dp"
