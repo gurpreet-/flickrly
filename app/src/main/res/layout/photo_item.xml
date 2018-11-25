@@ -27,6 +27,8 @@
 
 		<TextView android:layout_width="match_parent"
 		          android:text="Title"
+		          android:shadowColor="@color/blackT8"
+		          android:shadowRadius="2"
 		          android:id="@+id/title"
 		          android:maxLines="2"
 		          android:ellipsize="end"

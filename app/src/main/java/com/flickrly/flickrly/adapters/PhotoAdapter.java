@@ -71,6 +71,17 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
         notifyDataSetChanged();
     }
 
+    public void replaceAll(List<Photo> list) {
+        photos.clear();
+        int pos = 0;
+        for (Photo photo : list) {
+            photos.add(photo);
+            pos++;
+        }
+        notifyDataSetChanged();
+
+    }
+
     public PublishSubject<Photo> clickedListener() {
         return publishSubject;
     }
