@@ -16,7 +16,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -27,15 +26,13 @@ import com.flickrly.flickrly.api.RestApi;
 import com.flickrly.flickrly.dagger.GlideApp;
 import com.flickrly.flickrly.models.Photo;
 import dagger.android.AndroidInjection;
+import io.paperdb.Paper;
 import org.threeten.bp.Instant;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
 import javax.inject.Inject;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -64,11 +61,11 @@ public class PhotoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
 
-        photo = (Photo) getIntent().getSerializableExtra("photo");
+        photo = Paper.book().read("photo");
+        image = findViewById(R.id.image);
 
         TextView title = findViewById(R.id.title);
         TextView desc = findViewById(R.id.description);
-        image = findViewById(R.id.image);
         TextView dateTaken = findViewById(R.id.date_taken);
         TextView dateTakenTitle = findViewById(R.id.date_taken_title);
         TextView datePublished = findViewById(R.id.date_published);
@@ -99,16 +96,14 @@ public class PhotoActivity extends BaseActivity {
         if (photo.getDateTaken() != null) {
             dateTaken.setText(formatter.format(dateTakenInstant));
         } else {
-            dateTaken.setVisibility(View.GONE);
-            dateTakenTitle.setVisibility(View.GONE);
+            hideViews(dateTaken, dateTakenTitle);
         }
 
         Instant datePublishedInstant = photo.getPublished();
         if (photo.getPublished() != null) {
             datePublished.setText(formatter.format(datePublishedInstant));
         } else {
-            datePublished.setVisibility(View.GONE);
-            datePublishedTitle.setVisibility(View.GONE);
+            hideViews(datePublished, datePublishedTitle);
         }
 
         List<String> tags = photo.getListOfTags();
@@ -119,9 +114,7 @@ public class PhotoActivity extends BaseActivity {
         }
 
         if (tags.size() == 0) {
-            tagChipGroup.setVisibility(View.GONE);
-            tagChipGroupContainer.setVisibility(View.GONE);
-            tagChipsTitle.setVisibility(View.GONE);
+            hideViews(tagChipGroup, tagChipGroupContainer, tagChipsTitle);
         }
 
         addToGalleryBtn.setOnClickListener(view -> saveImageToGallery());

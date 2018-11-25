@@ -6,8 +6,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Photo implements Serializable {
+
     private String tags;
 
     private String author;
@@ -22,10 +22,9 @@ public class Photo implements Serializable {
 
     private String authorId;
 
-
     private Instant published;
 
-    private Media media;
+    public Media media;
 
     public String getTags() {
         return tags;

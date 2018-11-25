@@ -1,8 +1,10 @@
 package com.flickrly.flickrly.models;
 
+
 import java.io.Serializable;
 
 public class Media implements Serializable {
+
     private String m;
 
     public String getM() {

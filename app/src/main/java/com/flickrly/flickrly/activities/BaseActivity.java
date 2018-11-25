@@ -37,6 +37,12 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    protected void hideViews(View... views) {
+        for (View v : views) {
+            v.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(IconicsContextWrapper.wrap(newBase));

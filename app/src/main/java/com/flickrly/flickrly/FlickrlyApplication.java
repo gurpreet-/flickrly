@@ -9,6 +9,7 @@ import dagger.android.HasActivityInjector;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
+import io.paperdb.Paper;
 
 import javax.inject.Inject;
 
@@ -23,8 +24,9 @@ public class FlickrlyApplication extends Application implements HasActivityInjec
     public void onCreate() {
         super.onCreate();
         ViewPump.init(getViewPump());
-
         DaggerAppComponent.builder().mainModule(new MainModule(this)).build().inject(this);
+
+        Paper.init(this);
     }
 
     private ViewPump getViewPump() {

@@ -30,6 +30,7 @@ import com.flickrly.flickrly.models.Photo;
 import com.flickrly.flickrly.models.PhotoShell;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import dagger.android.AndroidInjection;
+import io.paperdb.Paper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -176,7 +177,7 @@ public class MainActivity extends BaseActivity {
 
     private void onPhotoClicked(Photo photo) {
         Intent i = new Intent(this, PhotoActivity.class);
-        i.putExtra("photo", photo);
+        Paper.book().write("photo", photo);
         startActivity(i);
     }
 
@@ -190,6 +191,7 @@ public class MainActivity extends BaseActivity {
             // Is sorting by publication date
             sort = "date-posted-desc";
         }
+        Paper.book().delete("photos");
         Disposable d = api
                 .getPublicPhotos(sort)
                 .throttleWithTimeout(2000, TimeUnit.MILLISECONDS)
@@ -210,6 +212,7 @@ public class MainActivity extends BaseActivity {
         if (photoList.size() == 0) {
             return;
         }
+        Paper.book().write("photos", photoList);
         Collections.sort(photoList, (p1, p2) -> {
             if (isSortingByCreation()) {
                 if (p1.getDateTaken() != null && p2.getDateTaken() != null) {
@@ -237,10 +240,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menuNav) {
-        MenuItem refreshMenuItem = menuNav.add(Menu.NONE, 0, 100, "Refresh");
-        IconHelper.setupMenuItem(this, refreshMenuItem, GoogleMaterial.Icon.gmd_search);
-
-        refreshMenuItem.setOnMenuItemClickListener(menuItem -> true);
+        MenuItem searchMenuItem = menuNav.add(Menu.NONE, 0, 100, "Search");
+        IconHelper.setupMenuItem(this, searchMenuItem, GoogleMaterial.Icon.gmd_search);
+        searchMenuItem.setOnMenuItemClickListener(menuItem -> {
+            Intent i = new Intent(this, SearchActivity.class);
+            startActivity(i);
+            return true;
+        });
 
         return super.onCreateOptionsMenu(menuNav);
     }

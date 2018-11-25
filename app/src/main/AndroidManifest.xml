@@ -22,6 +22,7 @@
 		</activity>
 
 		<activity android:name=".activities.PhotoActivity" />
+		<activity android:name=".activities.SearchActivity" />
 
 	</application>
 
