@@ -31,7 +31,7 @@
 				android:paddingStart="12dp"
 				android:paddingEnd="12dp"
 				android:gravity="center"
-				android:textSize="13sp"
+				android:textSize="15sp"
 				android:background="@color/black"
 				android:textColor="@color/whiteD1"
 				android:height="60dp"
@@ -39,8 +39,10 @@
 				android:textColorHint="@color/snowD3"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				app:layout_constraintTop_toBottomOf="@+id/toolbar" app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toEndOf="parent" android:id="@+id/appCompatEditText2"/>
+				app:layout_constraintTop_toBottomOf="@+id/toolbar"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				android:id="@+id/search_box"/>
 
 
 		<android.support.v7.widget.RecyclerView android:layout_width="0dp"
@@ -54,7 +56,7 @@
 		                                        app:layout_constraintEnd_toEndOf="parent"
 		                                        app:layout_constraintBottom_toBottomOf="parent"
 		                                        app:layout_constraintHorizontal_bias="0.0"
-		                                        app:layout_constraintTop_toBottomOf="@+id/appCompatEditText2"/>
+		                                        app:layout_constraintTop_toBottomOf="@+id/search_box"/>
 
 
 	</android.support.constraint.ConstraintLayout>
