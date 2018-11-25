@@ -2,13 +2,12 @@ package com.flickrly.flickrly.dagger;
 
 import android.content.Context;
 import com.flickrly.flickrly.api.RestApi;
-import com.flickrly.flickrly.converters.GsonDateTimeConverter;
-import com.flickrly.flickrly.converters.LocalDateConverter;
+import com.flickrly.flickrly.converters.*;
+import com.flickrly.flickrly.factories.RxThreadingCallAdapterFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dagger.Module;
 import dagger.Provides;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.CipherSuite;
 import okhttp3.ConnectionSpec;
@@ -17,10 +16,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -72,21 +69,16 @@ public class MainModule {
                 .build();
     }
 
-    @Provides
-    RxJava2CallAdapterFactory provideRxAdapter() {
-        return RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io());
-    }
-
 
     @Provides
     RestApi provideRetrofit(Gson gson,
-                            OkHttpClient okHttpClient,
-                            RxJava2CallAdapterFactory adapterFactory) {
+                            OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(new GsonPhotoShellConverter(gson))
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl("https://api.flickr.com/")
                 .client(okHttpClient)
-                .addCallAdapterFactory(adapterFactory)
+                .addCallAdapterFactory(RxThreadingCallAdapterFactory.create())
                 .build();
         return retrofit.create(RestApi.class);
     }
@@ -97,7 +89,7 @@ public class MainModule {
                 .serializeNulls()
                 .setLenient()
                 .registerTypeAdapter(Instant.class, new GsonDateTimeConverter())
-                .registerTypeAdapter(LocalDate.class, new LocalDateConverter())
+                .registerTypeAdapter(LocalDate.class, new GsonLocalDateConverter())
                 .create();
     }
 

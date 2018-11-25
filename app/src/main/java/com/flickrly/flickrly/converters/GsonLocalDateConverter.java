@@ -13,7 +13,7 @@ import org.threeten.bp.LocalDate;
 
 import java.lang.reflect.Type;
 
-public class LocalDateConverter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
+public class GsonLocalDateConverter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
 
 
     @Override

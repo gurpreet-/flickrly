@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
                                               xmlns:app="http://schemas.android.com/apk/res-auto"
-                                              app:cardCornerRadius="8dp"
+                                              app:cardCornerRadius="12dp"
+                                              app:cardElevation="2dp"
+                                              android:translationZ="4dp"
                                               android:layout_marginBottom="18dp"
                                               app:cardPreventCornerOverlap="true"
                                               android:layout_width="match_parent"
-                                              android:layout_height="320dp">
+                                              android:layout_height="240dp">
 
 	<android.support.constraint.ConstraintLayout android:layout_width="match_parent"
 	                                             android:layout_height="match_parent">
 
-		<ImageView
+		<android.support.v7.widget.AppCompatImageView
 				android:id="@+id/image"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
@@ -24,15 +26,16 @@
 
 		<TextView android:layout_width="match_parent"
 		          android:text="Title"
-		          android:textSize="26sp"
+		          android:id="@+id/title"
+		          android:textSize="18sp"
 		          android:textStyle="bold"
 		          android:textColor="@color/white"
 		          android:layout_height="wrap_content"
-		          android:layout_marginBottom="8dp"
+		          android:layout_marginBottom="16dp"
 		          app:layout_constraintBottom_toBottomOf="@+id/image"
 		          app:layout_constraintStart_toStartOf="parent"
-		          android:layout_marginStart="8dp"
-		          android:layout_marginEnd="8dp"
+		          android:layout_marginStart="16dp"
+		          android:layout_marginEnd="16dp"
 		          app:layout_constraintEnd_toEndOf="parent"/>
 
 

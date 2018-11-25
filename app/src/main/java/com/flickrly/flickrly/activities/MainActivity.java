@@ -8,18 +8,27 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import com.flickrly.flickrly.R;
+import com.flickrly.flickrly.adapters.PhotoAdapter;
 import com.flickrly.flickrly.api.RestApi;
 import com.flickrly.flickrly.helpers.IconHelper;
+import com.flickrly.flickrly.models.Photo;
+import com.flickrly.flickrly.models.PhotoShell;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import dagger.android.AndroidInjection;
+import io.reactivex.disposables.Disposable;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
     @Inject
     RestApi api;
+    private PhotoAdapter photoAdapter;
+    private RecyclerView photosRv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +38,23 @@ public class MainActivity extends BaseActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         MaterialButton sortBtn = findViewById(R.id.sort_btn);
-        RecyclerView photosRv = findViewById(R.id.photos_rv);
+        photosRv = findViewById(R.id.photos_rv);
 
         setSupportActionBar(toolbar);
         IconHelper.setupButton(this, sortBtn, GoogleMaterial.Icon.gmd_keyboard_arrow_down);
 
         photosRv.setLayoutManager(new LinearLayoutManager(this));
+        photoAdapter = new PhotoAdapter(new ArrayList<>());
+        photosRv.setAdapter(photoAdapter);
 
+        Disposable d = api
+                .getPublicPhotos()
+                .subscribe(this::gotPhotos, Throwable::printStackTrace);
+        registerDisposable(d);
+    }
 
-        //photosRv.setAdapter();
+    private void gotPhotos(PhotoShell photoShell) {
+        photoAdapter.addAll(photoShell.getItems());
     }
 
     @Override
