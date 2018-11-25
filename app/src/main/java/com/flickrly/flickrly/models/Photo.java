@@ -51,11 +51,11 @@ public class Photo {
         this.description = description;
     }
 
-    public String getDate_taken() {
+    public String getDateTaken() {
         return date_taken;
     }
 
-    public void setDate_taken(String date_taken) {
+    public void setDateTaken(String date_taken) {
         this.date_taken = date_taken;
     }
 
@@ -67,11 +67,11 @@ public class Photo {
         this.link = link;
     }
 
-    public String getAuthor_id() {
+    public String getAuthorId() {
         return author_id;
     }
 
-    public void setAuthor_id(String author_id) {
+    public void setAuthorId(String author_id) {
         this.author_id = author_id;
     }
 
