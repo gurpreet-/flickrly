@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
+import android.support.design.chip.Chip;
+import android.support.design.chip.ChipGroup;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,8 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.flickrly.flickrly.R;
@@ -25,14 +29,25 @@ import com.flickrly.flickrly.models.PhotoShell;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import dagger.android.AndroidInjection;
 import io.reactivex.disposables.Disposable;
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class PhotoActivity extends BaseActivity {
 
     @Inject
     RestApi api;
+
+    DateTimeFormatter formatter =
+            DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+                    .withLocale(Locale.UK)
+                    .withZone(ZoneId.systemDefault());
 
 
     @Override
@@ -50,6 +65,13 @@ public class PhotoActivity extends BaseActivity {
         TextView title = findViewById(R.id.title);
         TextView desc = findViewById(R.id.description);
         AppCompatImageView image = findViewById(R.id.image);
+        TextView dateTaken = findViewById(R.id.date_taken);
+        TextView dateTakenTitle = findViewById(R.id.date_taken_title);
+        TextView datePublished = findViewById(R.id.date_published);
+        TextView datePublishedTitle = findViewById(R.id.date_published_title);
+        ChipGroup tagChipGroup = findViewById(R.id.tags);
+        HorizontalScrollView tagChipGroupContainer = findViewById(R.id.tags_container);
+        TextView tagChipsTitle = findViewById(R.id.tags_title);
 
         title.setText(photo.getTitle());
 
@@ -66,6 +88,34 @@ public class PhotoActivity extends BaseActivity {
                 .transition(BitmapTransitionOptions.withCrossFade())
                 .into(image);
 
+        Instant dateTakenInstant = photo.getDateTaken();
+        if (photo.getDateTaken() != null) {
+            dateTaken.setText(formatter.format(dateTakenInstant));
+        } else {
+            dateTaken.setVisibility(View.GONE);
+            dateTakenTitle.setVisibility(View.GONE);
+        }
+
+        Instant datePublishedInstant = photo.getPublished();
+        if (photo.getPublished() != null) {
+            datePublished.setText(formatter.format(datePublishedInstant));
+        } else {
+            datePublished.setVisibility(View.GONE);
+            datePublishedTitle.setVisibility(View.GONE);
+        }
+
+        List<String> tags = photo.getListOfTags();
+        for (String tag : tags) {
+            Chip chip = new Chip(this);
+            chip.setText(tag);
+            tagChipGroup.addView(chip);
+        }
+
+        if (tags.size() == 0) {
+            tagChipGroup.setVisibility(View.GONE);
+            tagChipGroupContainer.setVisibility(View.GONE);
+            tagChipsTitle.setVisibility(View.GONE);
+        }
     }
 
     @Override

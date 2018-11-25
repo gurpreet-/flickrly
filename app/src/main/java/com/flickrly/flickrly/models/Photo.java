@@ -3,6 +3,8 @@ package com.flickrly.flickrly.models;
 import org.threeten.bp.Instant;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Photo implements Serializable {
@@ -27,6 +29,21 @@ public class Photo implements Serializable {
 
     public String getTags() {
         return tags;
+    }
+
+    public List<String> getListOfTags() {
+        if (getTags() == null || getTags().trim().length() == 0) {
+            return new ArrayList<>();
+        }
+        List<String> l = new ArrayList<>();
+        String[] splat = getTags().split("\\s+");
+        for (String s : splat) {
+            String str = s.trim();
+            if (str.length() > 0) {
+                l.add(str);
+            }
+        }
+        return l;
     }
 
     public void setTags(String tags) {
