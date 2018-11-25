@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
                                               xmlns:app="http://schemas.android.com/apk/res-auto"
+                                              android:clickable="true"
                                               app:cardCornerRadius="12dp"
                                               app:cardElevation="2dp"
                                               android:translationZ="4dp"
@@ -27,6 +28,8 @@
 		<TextView android:layout_width="match_parent"
 		          android:text="Title"
 		          android:id="@+id/title"
+		          android:maxLines="2"
+		          android:ellipsize="end"
 		          android:textSize="18sp"
 		          android:textStyle="bold"
 		          android:textColor="@color/white"

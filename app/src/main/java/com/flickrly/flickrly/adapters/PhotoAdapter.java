@@ -1,9 +1,11 @@
 package com.flickrly.flickrly.adapters;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +48,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Photo item = photos.get(position);
-//        LocalDate date = item.getDate();
-//        String formatted = date.format(dtf);
         holder.title.setText(item.getTitle());
+        holder.itemView.setOnClickListener(view -> publishSubject.onNext(item));
 
         GlideApp.with(holder.itemView.getContext())
                 .asBitmap()
@@ -58,12 +59,19 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
                 .into(holder.imageView);
     }
 
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull MyViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        holder.itemView.setOnClickListener(null);
+    }
+
     public void addAll(List<Photo> list) {
         this.photos.addAll(list);
         notifyDataSetChanged();
     }
 
-    public PublishSubject<Photo> getPublishSubject() {
+    public PublishSubject<Photo> clickedListener() {
         return publishSubject;
     }
 
