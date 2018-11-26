@@ -358,6 +358,9 @@ public class MainActivity extends BaseActivity {
         return super.onCreateOptionsMenu(menuNav);
     }
 
+    public PhotoAdapter getPhotoAdapter() {
+        return photoAdapter;
+    }
 
     @Override
     public void onDestroy() {
